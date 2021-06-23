@@ -4,8 +4,10 @@ from typing import Any
 class Node:
     name: str
     age: int
+    key: str
 
-    def __init__(self, name, age) -> None:
+    def __init__(self, key, name, age) -> None:
+        self.key = key
         self.name = name
         self.age = age
-        pass
+        return None

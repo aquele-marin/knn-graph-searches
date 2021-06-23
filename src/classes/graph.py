@@ -5,12 +5,10 @@ class Graph:
     nodes: dict
     edges: dict
     nodeType: Type[Any]
-    keyName: str
 
-    def __init__(self, keyName: str, nodeType: Type[Any]) -> None:
+    def __init__(self, nodeType: Type[Any]) -> None:
         self.totalNodes = 0
         self.nodeType = nodeType
-        self.keyName = keyName
 
         # Cria dicionario para o identificador
         self.nodes = dict()
@@ -18,21 +16,24 @@ class Graph:
         # Cria dicionario para as arestas
         self.edges = dict()
 
-        pass
+        return None
 
     def addVertex(self, vertex) -> bool:
         if self.nodeType != type(vertex):
             print("addVertex: This node type is not supported in this graph")
             return False
+        if not hasattr(vertex, "key"):
+            print("addVertex: This node doesn't have a key attribute")
+            return False
+        if self.nodes.get(vertex.key, None) != None:
+            print("addVertex: The key in this node already exists")
+            return False
 
         # Adiciona vertex nos dicionários
-        self.nodes[str(self.totalNodes)] = vertex
-
-        # Assina o vertex com a chave do grafo
-        setattr(vertex, self.keyName, str(self.totalNodes))
+        self.nodes[vertex.key] = vertex
 
         # Cria dicionario para arestas
-        self.edges[getattr(vertex, self.keyName)] = dict()
+        self.edges[vertex.key] = dict()
 
         self.totalNodes = self.totalNodes + 1
 
@@ -42,11 +43,11 @@ class Graph:
         if self.nodeType != type(vertex):
             print("vertexExists: This node type is not supported in this graph")
             return False
-        if not hasattr(vertex, self.keyName):
-            print("vertexExists: This node is not in this graph")
+        if not hasattr(vertex, "key"):
+            print("vertexExists: This node doesn't have a key attribute")
             return False
 
-        _vertex = self.nodes.get(getattr(vertex, self.keyName), None)
+        _vertex = self.nodes.get(vertex.key, None)
         if _vertex == None:
             print("vertexExists: Vertex doesn't exists")
             return False
@@ -63,23 +64,23 @@ class Graph:
         if self.nodeType != type(source):
             print("addEdge: This source node type is not supported in this graph")
             return False
-        if not hasattr(source, self.keyName):
-            print("addEdge: This source node is not in this graph")
+        if not hasattr(source, "key"):
+            print("addEdge: This source node doesn't have a key attribute")
             return False
 
         if self.nodeType != type(destination):
             print("addEdge: This destination node type is not supported in this graph")
             return False
-        if not hasattr(destination, self.keyName):
-            print("addEdge: This destination node is not in this graph")
+        if not hasattr(destination, "key"):
+            print("addEdge: This destination node doesn't have a key attribute")
             return False
 
         # [0]        [1]          [2]       [3]           [4] Nodes
         # [1: True]  [0: True]              [0: True]
         # [4: True]
         # [3: True]
-        self.edges[getattr(source, self.keyName)][getattr(destination, self.keyName)] = True
-        self.edges[getattr(destination, self.keyName)][getattr(source, self.keyName)] = True
+        self.edges[source.key][destination.key] = True
+        self.edges[destination.key][source.key] = True
 
         return True
 
@@ -87,20 +88,25 @@ class Graph:
         if self.nodeType != type(source):
             print("edgeExists: This source node type is not supported in this graph")
             return False
-        if not hasattr(source, self.keyName):
-            print("edgeExists: This source node is not in this graph")
+        if not hasattr(source, "key"):
+            print("edgeExists: This source node doesn't have a key attribute")
             return False
 
         if self.nodeType != type(destination):
             print("edgeExists: This destination node type is not supported in this graph")
             return False
-        if not hasattr(destination, self.keyName):
-            print("edgeExists: This destination node is not in this graph")
+        if not hasattr(destination, "key"):
+            print("edgeExists: This source node doesn't have a key attribute")
             return False
 
-        edge = self.edges.get(getattr(source, self.keyName), None).get(getattr(destination, self.keyName), None)
-        if edge == None:
-            print("edgeExists: Edge not found")
+        firstNode = self.edges.get(source.key, None)
+        if firstNode == None:
+            print("edgeExists: Source node not found")
+            return False
+        
+        secondNode = self.edges.get(source.key).get(destination.key, None)
+        if secondNode == None:
+            print("edgeExists: Destination node not found")
             return False
         else:
             return True
@@ -110,23 +116,25 @@ class Graph:
             return True
         else:
             return False
+
     # O(N)
     def removeNode(self, vertex):
         if self.nodeType != type(vertex):
             print("removeNode: This node type is not supported in this graph")
             return False
-        if not hasattr(vertex, self.keyName):
-            print("removeNode: This node is not in this graph")
+        if not hasattr(vertex, "key"):
+            print("removeNode: This node doesn't have a key attribute")
             return False
 
-        nodeKey = getattr(vertex, self.keyName)
+        nodeKey = vertex.key
 
         self.nodes.pop(nodeKey)
 
-        self.edges.pop(nodeKey)
+        for node in self.edges[nodeKey]:
+            self.edges[node].pop(nodeKey)
 
-        for node in self.edges:
-            self.edges[node].pop(nodeKey, None)
+        self.edges.pop(nodeKey)
+        self.totalNodes = self.totalNodes - 1
             
         return True
 
@@ -134,38 +142,37 @@ class Graph:
         if self.nodeType != type(vertex):
             print("getFirstConnectedVertexIndex: This node type is not supported in this graph")
             return None
-        if not hasattr(vertex, self.keyName):
-            print("getFirstConnectedVertexIndex: This node is not in this graph")
+        if not hasattr(vertex, "key"):
+            print("getFirstConnectedVertexIndex: This node doesn't have a key attribute")
             return None
 
-        return self.nodes[list(self.edges[getattr(vertex, self.keyName)].keys())[0]]
+        return self.nodes[list(self.edges[vertex.key].keys())[0]]
 
     # O(N)
     def getNextConnectedVertexIndex(self, vertex, currentEdge):
         if self.nodeType != type(vertex):
             print("getNextConnectedVertexIndex: This node type is not supported in this graph")
             return None
-        if not hasattr(vertex, self.keyName):
-            print("getNextConnectedVertexIndex: This node is not in this graph")
+        if not hasattr(vertex, "key"):
+            print("getNextConnectedVertexIndex: This node doesn't have a key attribute")
             return None
 
         if self.nodeType != type(currentEdge):
             print("getNextConnectedVertexIndex: This edge node type is not supported in this graph")
             return None
-        if not hasattr(currentEdge, self.keyName):
-            print("getNextConnectedVertexIndex: This edge node is not in this graph")
+        if not hasattr(currentEdge, "key"):
+            print("getNextConnectedVertexIndex: This node doesn't have a key attribute")
             return None
 
-        if getattr(vertex, self.keyName) == getattr(currentEdge, self.keyName):
-            print("getNextConnectedVertexIndex: This edge is this node !")
+        if vertex.key == currentEdge.key:
+            print("getNextConnectedVertexIndex: Both nodes have the same key !")
             return None
 
         flag = 0
-        for edge in list(self.edges[getattr(vertex, self.keyName)]):
-            # self.edges[getattr(vertex, self.keyName)][edge]
+        for edge in self.edges[vertex.key]:
             if flag == 1:
                 return self.nodes[edge]
-            if getattr(self.nodes[edge], self.keyName) == getattr(currentEdge, self.keyName):
+            if self.nodes[edge].key == currentEdge.key:
                 flag = 1
             
         if flag == 0:
@@ -176,16 +183,17 @@ class Graph:
     def printGraph(self):
 
         for node in self.nodes:
-            currentNode = getattr(self.nodes[node], self.keyName)
+            currentNode = self.nodes[node].key
             print(currentNode)
 
             for edge in self.edges[currentNode]:
-                print(currentNode + " -> " + getattr(self.nodes[edge], self.keyName))
+                print(currentNode + " -> " + self.nodes[edge].key)
 
         pass
 
     def clear(self):
         self.totalNodes = 0
         self.nodes.clear()
+        self.edges.clear()
 
         pass
