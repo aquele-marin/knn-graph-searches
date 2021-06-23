@@ -2,12 +2,12 @@ from typing import Any
 
 # Criando nó com tipos declarados
 class Node:
-    name: str
-    age: int
+    x: int
+    y: int
     key: str
 
-    def __init__(self, key, name, age) -> None:
+    def __init__(self, key, x, y) -> None:
         self.key = key
-        self.name = name
-        self.age = age
+        self.x = x
+        self.y = y
         return None
