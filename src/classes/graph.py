@@ -1,4 +1,9 @@
 from typing import Any, Type
+import random
+
+import numpy as np
+from sklearn.neighbors import kneighbors_graph
+from matplotlib import pyplot as plt
 class Graph:
 
     totalNodes: int
@@ -79,6 +84,7 @@ class Graph:
         # [1: True]  [0: True]              [0: True]
         # [4: True]
         # [3: True]
+
         self.edges[source.key][destination.key] = True
         self.edges[destination.key][source.key] = True
 
@@ -197,3 +203,38 @@ class Graph:
         self.edges.clear()
 
         pass
+
+    def buildKNNGraph(self, n=None):
+        if n == None:
+            print("buldKNN: Plese reference N nearest neighbors")
+            return False
+
+        X = self.toArray(['x', 'y'])
+        A = kneighbors_graph(X, n, mode='connectivity')
+        matrix = A.toarray()
+        matrixLength = len(matrix)
+
+        nodesArray = self._toArray()
+        for i in range(matrixLength):
+            for j in range(matrixLength):
+                if matrix[i][j] == 1.0:
+                    self.addEdge(self.nodes[nodesArray[i]], self.nodes[nodesArray[j]])
+
+        print(X)
+        plt.scatter([x[0] for x in X], [x[1] for x in X])
+        plt.show()
+
+        return True
+        
+    def _toArray(self):
+        return np.array(list(self.nodes))
+
+    def toArray(self, struct = []):
+        array = self._toArray()
+        newArray = [[] for _ in range(self.totalNodes)]
+
+        for i in range(self.totalNodes):
+            for attr in struct:
+                newArray[i].append(getattr(self.nodes[array[i]], attr))
+            
+        return newArray

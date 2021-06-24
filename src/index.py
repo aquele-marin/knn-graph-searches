@@ -4,23 +4,25 @@ class Program:
     def __init__(self) -> None:
         grafo = Graph(nodeType=Node)
         
-        no = Node("0", "Batata", 12)
-        noo = Node("1", "Patata", 18)
-        noa = Node("2", "Potato", 18)
+        no = Node("0", 1, 1)
+        noo = Node("1", 2, 2)
+        noa = Node("2", 1, 2)
+        nou = Node("3", 2, 1)
 
         grafo.addVertex(no)
         grafo.addVertex(noo)
         grafo.addVertex(noa)
+        grafo.addVertex(nou)
 
-        grafo.addEdge(no, noo)
-        grafo.addEdge(no, noa)
+        # grafo.addEdge(no, noo)
+        # grafo.addEdge(no, noa)
 
-        print(grafo.edgeExists(no, noo))
-        print(grafo.edgeExists(no, noa))
+        # grafo.toArray(['x', 'y'])
+        # print(grafo.edgeExists(no, noo))
+        # print(grafo.edgeExists(no, noa))
 
-        print(grafo.getFirstConnectedVertexIndex(no))
-        print(grafo.getNextConnectedVertexIndex(no, noo))
+        # print(grafo.getFirstConnectedVertexIndex(no))
+        # print(grafo.getNextConnectedVertexIndex(no, noo))
 
-        # print(grafo.removeNode(no))
-
+        grafo.buildKNNGraph(2)
         grafo.printGraph()

@@ -3,7 +3,7 @@ class DepthFirstSearch():
         self.graph = graph
         return None
 
-    def search(self, startNode=None, visited=None):
+    def Execute(self, startNode=None, visited=None):
         if startNode == None:
             startNode = self.nodes['0']
 
