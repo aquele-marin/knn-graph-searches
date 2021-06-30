@@ -1,5 +1,6 @@
 from src.classes.node import Node
 from src.classes.graph import Graph
+from src.classes.depthFirstSearch import DepthFirstSearch
 class Program:
     def __init__(self) -> None:
         grafo = Graph(nodeType=Node)
@@ -14,15 +15,9 @@ class Program:
         grafo.addVertex(noa)
         grafo.addVertex(nou)
 
-        # grafo.addEdge(no, noo)
-        # grafo.addEdge(no, noa)
-
-        # grafo.toArray(['x', 'y'])
-        # print(grafo.edgeExists(no, noo))
-        # print(grafo.edgeExists(no, noa))
-
-        # print(grafo.getFirstConnectedVertexIndex(no))
-        # print(grafo.getNextConnectedVertexIndex(no, noo))
-
         grafo.buildKNNGraph(2)
-        grafo.printGraph()
+
+        busca = DepthFirstSearch(grafo)
+
+        busca.searchFor(noo.key)
+        path = busca.Execute(startNodeKey=no.key)

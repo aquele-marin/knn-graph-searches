@@ -195,14 +195,14 @@ class Graph:
             for edge in self.edges[currentNode]:
                 print(currentNode + " -> " + self.nodes[edge].key)
 
-        pass
+        return None
 
     def clear(self):
         self.totalNodes = 0
         self.nodes.clear()
         self.edges.clear()
 
-        pass
+        return None
 
     def buildKNNGraph(self, n=None):
         if n == None:
@@ -220,9 +220,8 @@ class Graph:
                 if matrix[i][j] == 1.0:
                     self.addEdge(self.nodes[nodesArray[i]], self.nodes[nodesArray[j]])
 
-        print(X)
-        plt.scatter([x[0] for x in X], [x[1] for x in X])
-        plt.show()
+        # plt.scatter([x[0] for x in X], [x[1] for x in X])
+        # plt.show()
 
         return True
         
