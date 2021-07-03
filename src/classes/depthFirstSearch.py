@@ -20,15 +20,17 @@ class DepthFirstSearch():
             visited = list()
 
         visited.append(startNodeKey)
+        
+        if startNodeKey == self.searchNode:
+            return visited
 
         vector = [x for x in list(self.graph.edges[startNodeKey]) if x not in visited]
 
+
         for next in vector:
-            if next == self.searchNode:
-                visited.append(next)
-                return visited
-            else:
-                if not visited[len(visited)-1] == self.searchNode:
-                    self.Execute(next,visited)
+            self.Execute(next, visited)
+            if visited[len(visited)-1] == self.searchNode:
+                break
+
 
         return visited

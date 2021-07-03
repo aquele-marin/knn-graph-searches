@@ -21,3 +21,4 @@ class Program:
 
         busca.searchFor(noo.key)
         path = busca.Execute(startNodeKey=no.key)
+        print(path)
