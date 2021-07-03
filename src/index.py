@@ -1,6 +1,7 @@
 from src.classes.node import Node
 from src.classes.graph import Graph
 from src.classes.depthFirstSearch import DepthFirstSearch
+from src.classes.breadthFirstSearch import BreadthFirstSearch
 class Program:
     def __init__(self) -> None:
         grafo = Graph(nodeType=Node)
@@ -17,8 +18,9 @@ class Program:
 
         grafo.buildKNNGraph(2)
 
-        busca = DepthFirstSearch(grafo)
+        # busca = DepthFirstSearch(grafo)
+        busca = BreadthFirstSearch(grafo)
 
-        busca.searchFor(noo.key)
-        path = busca.Execute(startNodeKey=no.key)
+        busca.searchFor(nou.key)
+        path = busca.Execute(rootNodeKey=no.key)
         print(path)

@@ -1,4 +1,3 @@
-from src.classes.node import Node
 class DepthFirstSearch():
     def __init__(self,  graph) -> None:
         self.graph = graph
@@ -6,7 +5,6 @@ class DepthFirstSearch():
 
     def searchFor(self, nodeKey):
         self.searchNode = nodeKey
-        return Node
 
     def Execute(self, startNodeKey=None,visited=None):
         if self.searchNode == None:
