@@ -2,7 +2,7 @@ import collections
 class BreadthFirstSearch():
     def __init__(self, graph) -> None:
         self.graph = graph
-        return None
+        self.searchNode = None
 
     def searchFor(self, nodeKey):
         self.searchNode = nodeKey
