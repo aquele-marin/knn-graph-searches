@@ -1,13 +1,11 @@
 import collections
+import time
 class BreadthFirstSearch():
     def __init__(self, graph) -> None:
         self.graph = graph
-        self.searchNode = None
 
-    def searchFor(self, nodeKey):
-        self.searchNode = nodeKey
-
-    def Execute(self, rootNodeKey):
+    def Execute(self, rootNodeKey, destNodeKey):
+        tic = time.perf_counter()
         visited, queue = list(), collections.deque([rootNodeKey])
         visited.append(rootNodeKey)
 
@@ -16,14 +14,22 @@ class BreadthFirstSearch():
             # Tira um vertex da fila
             vertex = queue.popleft()
 
-            # Se não tiver sido visitado, marca como visitado
-            # e coloca na fila
+            
+            if destNodeKey in self.graph.edges[vertex]:
+                visited.append(destNodeKey)
+
+                toc = time.perf_counter()
+                timeval = toc - tic
+                return timeval, [x for x in visited if x not in queue]
+
             for neighbour in self.graph.edges[vertex]:
-                if self.searchNode in self.graph.edges[vertex]:
-                    visited.append(self.searchNode)
-                    return [x for x in visited if x not in queue]
-                elif neighbour not in visited:
+                # Se não tiver sido visitado, marca como visitado
+                # e coloca na fila
+                if neighbour not in visited:
                     visited.append(neighbour)
                     queue.append(neighbour)
+                    
 
-        return visited
+        toc = time.perf_counter()
+        timeval = toc - tic
+        return timeval, visited

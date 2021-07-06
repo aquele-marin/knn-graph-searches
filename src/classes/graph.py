@@ -1,9 +1,9 @@
 from typing import Any, Type
-import random
 
 import numpy as np
 from sklearn.neighbors import kneighbors_graph
 from matplotlib import pyplot as plt
+import networkx as nx
 class Graph:
 
     totalNodes: int
@@ -209,8 +209,11 @@ class Graph:
             print("buldKNN: Plese reference N nearest neighbors")
             return False
 
+        self.knn = n
+
         X = self.toArray(['x', 'y'])
         A = kneighbors_graph(X, n, mode='connectivity')
+        self.sklearn = A
         matrix = A.toarray()
         matrixLength = len(matrix)
 
@@ -219,9 +222,6 @@ class Graph:
             for j in range(matrixLength):
                 if matrix[i][j] == 1.0:
                     self.addEdge(self.nodes[nodesArray[i]], self.nodes[nodesArray[j]])
-
-        # plt.scatter([x[0] for x in X], [x[1] for x in X])
-        # plt.show()
 
         return True
         
@@ -237,3 +237,26 @@ class Graph:
                 newArray[i].append(getattr(self.nodes[array[i]], attr))
             
         return newArray
+
+    def plotGraph(self):
+        g = nx.Graph(self.sklearn)
+        plt.figure(figsize=(18,18))
+        nx.draw_networkx(g, self.nodePositions, with_labels=True)
+        plt.axis('on')
+        plt.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+        plt.show()
+
+    def plotPath(self, path, imagePath):
+        G = nx.Graph(self.sklearn)
+        color_map = []
+        for node in G:
+            nodeString = str(self.nodeList[node][0]) + "," + str(self.nodeList[node][1])
+            if nodeString in path:
+                color_map.append('red')
+            else: 
+                color_map.append('green')
+        plt.figure(figsize=(18,18))
+        nx.draw_networkx(G, self.nodePositions, node_color=color_map, with_labels=False, node_size=20)
+        plt.axis('on'); plt.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+        plt.savefig(imagePath)
+        plt.close()

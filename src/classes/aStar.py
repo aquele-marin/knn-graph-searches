@@ -1,4 +1,5 @@
 import math
+import time
 from src.classes.heap import Heap
 class AStarSearch:
     def __init__(self, graph):
@@ -13,10 +14,14 @@ class AStarSearch:
         return math.sqrt(pow(x,2) + pow(y,2))
     
     def execute(self, originKey, destKey):
+        tic = time.perf_counter()
         node = self.graph.nodes[originKey]
         dest = self.graph.nodes[destKey]
         path = self.__searchPath(node, dest)
-        return path
+
+        toc = time.perf_counter()
+        timeval = toc - tic
+        return timeval, path
     
     # A* algorithm
     def __searchPath(self, origin, dest):

@@ -1,5 +1,3 @@
-from typing import Any
-
 # Criando nó com tipos declarados
 class Node:
     x: int

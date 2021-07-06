@@ -1,34 +1,36 @@
+import time
 class DepthFirstSearch():
     def __init__(self,  graph) -> None:
         self.graph = graph
-        self.searchNode = None
 
-    def searchFor(self, nodeKey):
-        self.searchNode = nodeKey
 
-    def Execute(self, startNodeKey=None,visited=None):
-        if self.searchNode == None:
-            print("depthFirstSeach.Execute: Searched node key must be addeed")
-            return False
-
+    def Execute(self, startNodeKey, destNodeKey, visited=None):
+        tic = time.perf_counter()
         if startNodeKey == None:
-            startNode = self.graph.nodes['0'].key
+            return None, None
 
         if visited is None:
             visited = list()
 
+        path = self.__execute(startNodeKey, destNodeKey, visited)
+
+        toc = time.perf_counter()
+        timeval = toc - tic
+        return timeval, path
+
+    def __execute(self, startNodeKey, destNodeKey, visited):
         visited.append(startNodeKey)
         
-        if startNodeKey == self.searchNode:
+        if startNodeKey == destNodeKey:
             return visited
 
         vector = [x for x in list(self.graph.edges[startNodeKey]) if x not in visited]
 
 
         for next in vector:
-            self.Execute(next, visited)
-            if visited[len(visited)-1] == self.searchNode:
+            self.__execute(next, destNodeKey, visited)
+            if visited[len(visited)-1] == destNodeKey:
                 break
 
-
+        
         return visited
