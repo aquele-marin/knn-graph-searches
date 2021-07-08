@@ -28,8 +28,10 @@ class AStarSearch:
         self.open.push((0, origin))
         self.localCost[origin.key] = 0
         self.path[origin.key] = None
+        visited = list()
         while not self.open.empty():
             current = self.open.pop()
+            visited.append(current[1].key)
             distance = current[0]
             node = current[1]
             if node.key == dest.key:
@@ -50,4 +52,4 @@ class AStarSearch:
         while last != origin.key:
                 last = self.path[last]
                 reconstructedPath.append(last)
-        return reconstructedPath
+        return visited
